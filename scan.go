@@ -1,0 +1,5 @@
+package janel
+
+func Scanner() {
+	//
+}

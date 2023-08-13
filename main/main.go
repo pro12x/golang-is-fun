@@ -26,16 +26,18 @@ var (
 )
 
 func main() {
+	janel.CleanScreen()
 	janel.Rules()
 	fmt.Scan(&rule)
 	if rule == 1 {
 		var player Player
-		min, max := 0, 100
+		min, max := 1, 100
 		player.level = 1
 		player.score = 0
 		credit = 5
 
 		janel.CleanScreen()
+		janel.Dashboard(credit, min, max, player.score, player.level)
 		color.Cyan("Type your pseudo : ")
 		fmt.Scan(&player.name)
 
@@ -49,7 +51,8 @@ func main() {
 				fmt.Scan(&nb)
 				if nb < min || nb > max {
 					janel.CleanScreen()
-					color.Cyan("Valid number is between %d and %d", min, max)
+					janel.Dashboard(credit, min, max, player.score, player.level)
+					color.Red("Valid number is between %d and %d", min, max)
 					continue
 				}
 				if nb > num {
@@ -66,7 +69,7 @@ func main() {
 					credit -= 1
 					janel.CleanScreen()
 					janel.Dashboard(credit, min, max, player.score, player.level)
-					color.Cyan("Congrat! You found %d after %d tries", num, 5-credit)
+					color.Green("Congrat! You found %d after %d tries", num, 5-credit)
 					player.score = player.score + (player.level * 5)
 					for true {
 						color.Cyan("Do you want to continue? (Y/n)")
@@ -82,7 +85,6 @@ func main() {
 					}
 					if check {
 						player.level++
-						min += 50
 						max += 100
 						num = rand.Intn(max-min) + min
 						credit = 5
