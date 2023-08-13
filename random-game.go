@@ -3,44 +3,77 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"strconv"
+
+	"github.com/inancgumus/screen"
 )
 
 type Player struct {
 	name  string
 	score int
 	level int
+	games int
 }
 
+var (
+	rep   string // Stock user answer
+	num   int    // Stock mystery number
+	nb    int    // user's number
+	check bool   // Check user's answer
+)
+
 func main() {
-	//My variables
 	var player Player
-	var in string
-	var test int
-	//var number int
-	var score int
-	var level int
-	score = 120
-	level = 12
+	min, max := 0, 100
 
-	//Assigning
-	player.name = "Janel"
-	player.score = score
-	player.level = level
+	fmt.Println("Type your pseudo : ")
+	fmt.Scan(&player.name)
 
-	for test <= 0 || test > 100 {
-		fmt.Scan(&in)
-		test, _ = strconv.Atoi(in)
-		if test == 0 || test < 0 || test > 100 {
-			fmt.Println("Type a valid number please !")
+	for true {
+		num = rand.Intn(max-min) + min
+		for true {
+			fmt.Println("Guess the number between", min, "and", max)
+			fmt.Scan(&nb)
+			if nb > num {
+				CleanScreen()
+				fmt.Println("It's smaller")
+			} else if nb < num {
+				CleanScreen()
+				fmt.Println("It's bigger")
+			} else {
+				CleanScreen()
+				fmt.Println("Congrat! You found", num)
+				for true {
+					fmt.Println("Do you want to continue? (Y/n)")
+					fmt.Scan(&rep)
+					CleanScreen()
+					if rep == "N" || rep == "n" {
+						check = false
+						break
+					} else if rep == "Y" || rep == "y" {
+						check = true
+						break
+					}
+				}
+				if check {
+					player.level++
+					min += 50
+					max += 100
+					num = rand.Intn(max-min) + min
+				} else {
+					break
+				}
+			}
 		}
+		break
 	}
+	fmt.Println("Thank you", player.name, "!")
+	fmt.Println("Level :", player.level)
+	fmt.Println("Score", player.score)
+	fmt.Println("Thank you", player.name)
+	fmt.Println("Thank you", player.name)
+}
 
-	//Display
-	/* fmt.Println(player.name)
-	fmt.Println(player.score)
-	fmt.Println(player.level)
-	fmt.Println(number) */
-	fmt.Println(test)
-	fmt.Println(rand.Intn(100-1) + 1)
+func CleanScreen() {
+	screen.Clear()
+	screen.MoveTopLeft()
 }
