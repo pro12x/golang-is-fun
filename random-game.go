@@ -15,9 +15,9 @@ type Player struct {
 }
 
 var (
-	rep   string // Stock user answer
-	num   int    // Stock mystery number
-	nb    int    // user's number
+	rep   string // Pour récupérer la réponse de l'utilisateur
+	num   int    // Le nombre mystère
+	nb    int    // Pour récupérer le nombre de l'utilisateur
 	check bool   // Check user's answer
 )
 
@@ -30,15 +30,21 @@ func main() {
 
 	for true {
 		num = rand.Intn(max-min) + min
+		fmt.Println("Guess the number between", min, "and", max)
 		for true {
-			fmt.Println("Guess the number between", min, "and", max)
+			//fmt.Println("Guess the number between", min, "and", max)
 			fmt.Scan(&nb)
+			if nb < min || nb > max {
+				CleanScreen()
+				fmt.Println("Valid number is between", min, "and", max)
+				continue
+			}
 			if nb > num {
 				CleanScreen()
-				fmt.Println("It's smaller")
+				fmt.Println("The mystery number is less than", nb)
 			} else if nb < num {
 				CleanScreen()
-				fmt.Println("It's bigger")
+				fmt.Println("The mystery number is greater than", nb)
 			} else {
 				CleanScreen()
 				fmt.Println("Congrat! You found", num)
@@ -63,17 +69,24 @@ func main() {
 					break
 				}
 			}
+			//fmt.Println("Guess the number between", min, "and", max)
 		}
 		break
 	}
-	fmt.Println("Thank you", player.name, "!")
-	fmt.Println("Level :", player.level)
-	fmt.Println("Score", player.score)
-	fmt.Println("Thank you", player.name)
-	fmt.Println("Thank you", player.name)
+	CleanScreen()
+	GameOver(player.name, player.level, player.score, player.games)
 }
 
 func CleanScreen() {
 	screen.Clear()
 	screen.MoveTopLeft()
+}
+
+func GameOver(n string, l, s, g int) {
+	fmt.Println("*****************************************")
+	fmt.Println("*\tPlayer :", n, "\t\t\t*")
+	fmt.Println("*\tLevel :", l, "\t\t\t*")
+	fmt.Println("*\tScore :", s, "\t\t\t*")
+	fmt.Println("*\tYou played :", g, "times\t\t*")
+	fmt.Println("*****************************************")
 }
