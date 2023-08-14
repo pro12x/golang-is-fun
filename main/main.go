@@ -31,10 +31,10 @@ func main() {
 	fmt.Scan(&rule)
 	if rule == 1 {
 		var player Player
-		min, max := 1, 100
+		min, max := 0, 100
 		player.level = 1
 		player.score = 0
-		credit = 5
+		credit = 7
 
 		janel.CleanScreen()
 		janel.Dashboard(credit, min, max, player.score, player.level)
@@ -85,9 +85,10 @@ func main() {
 					}
 					if check {
 						player.level++
+						min += 50
 						max += 100
 						num = rand.Intn(max-min) + min
-						credit = 5
+						credit = 7
 						janel.CleanScreen()
 						janel.Dashboard(credit, min, max, player.score, player.level)
 					} else {
@@ -102,9 +103,9 @@ func main() {
 		}
 		janel.CleanScreen()
 		janel.GameOver(player.name, player.level, player.score, player.games)
-		time.Sleep(10 * time.Second)
+		time.Sleep(5 * time.Second)
 		// CleanScreen()
-		if player.level <= 2 {
+		if player.level < 5 {
 			janel.Looser()
 		} else {
 			janel.Winner()
