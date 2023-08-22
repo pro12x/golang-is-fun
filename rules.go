@@ -6,7 +6,7 @@ func Rules() {
 	color.Cyan("*****************************************************************")
 	color.Cyan("*\t\t\t      RULES    \t\t\t\t*")
 	color.Cyan("*\t\t\t      -----    \t\t\t\t*")
-	color.Cyan("*      Hello dear player, mystery is a simple game with     *")
+	color.Cyan("*      Hello  dear  player, mystery is a  simple  game with     *")
 	color.Cyan("*      an unlimited number of levels. You have seven credit     *")
 	color.Cyan("*      for each level,  if you run out of credits the  game     *")
 	color.Cyan("*      ends.  Your score increases according to your level,     *")
