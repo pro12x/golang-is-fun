@@ -1,8 +1,9 @@
 ```Csharp
-using System;
-using System.Collections;
+//using System;
+// using System.Collections.Generic;
+// using System.Linq;
 
-namespace Hello
+namespace Biblio
 {
     interface IEmpruntable
     {
@@ -72,27 +73,39 @@ namespace Hello
                 livre.ExemplaireDisponible++;
                 EmpruntEncours.Remove(emprunt);
             }
-            else
+            /*else
             {
                 Console.WriteLine("Le livre ne nous appartient pas");
-            }
+            }*/
         }
 
         public void LivresDisponible()
         {
-            Console.WriteLine("Liste des livres disponibles");
+            int id = 0;
             foreach (Livre livre in Livres.Where(e => e.EstEmpruntable()))
             {
-                Console.WriteLine($"- (livre.Titre) écrit par (livre.Auteur)");
+                id++;
+                Console.WriteLine(id + ":\n" + "\tTitre: " + livre.Titre + "\n\tAuteur " + livre.Auteur + "\n\tDisponibilité: [" + livre.ExemplaireDisponible + "] Exemplaires\n");
+            }
+
+            if (id == 0)
+            {
+                Console.WriteLine("Il n'y a aucun livre dans la bibliotheque\n");
             }
         }
 
         public void LivresEmpruntEncours()
         {
-            Console.WriteLine("Emprunts en cours");
+            int id = 0;
             foreach (Emprunt emprunt in EmpruntEncours)
             {
-                Console.WriteLine($"- (emprunt.LivreEmprunte.Titre) emprunté par (emprunt.DateEmprunt.ToShortDateString()) à rendre avant le (emprunt.DateRetourPrevue.ToShortDateString())");
+                id++;
+                Console.WriteLine(id + ":\n" + emprunt.LivresEmprunte.Titre + " - emprunté le " + emprunt.DateEmprunt.ToShortDateString() + " à rendre avant le " + emprunt.DateRetourPrevue.ToShortDateString() + "\n");
+            }
+
+            if (id == 0)
+            {
+                Console.WriteLine("Aucun livre n'a été emprunté\n");
             }
         }
     }
@@ -110,44 +123,117 @@ namespace Hello
             Console.WriteLine("0. Quitter\n");
         }
 
+        // Opération d'ajout
+        static void Ajouter(Bibliotheque bibliotheque)
+        {
+            Console.Write("Titre: ");
+            string titre = Console.ReadLine();
+
+            Console.Write("Auteur: ");
+            string auteur = Console.ReadLine();
+
+            Console.Write("ISBN: ");
+            string isbn = Console.ReadLine();
+
+            Console.Write("Nombre d'exemplaires: ");
+            int exemplaires = Convert.ToInt32(Console.ReadLine());
+
+            Livre nouveauLivre = new Livre { Titre = titre, Auteur = auteur, ISBN = isbn, ExemplaireDisponible = exemplaires };
+            bibliotheque.AjouterLivre(nouveauLivre);
+
+            Console.WriteLine("Livre ajouté avec succès!\n");
+        }
+
+        // Opération d'emprunt
+        static void Emprunter(Bibliotheque bibliotheque)
+        {
+            Console.Write("Titre: ");
+            string titre = Console.ReadLine();
+
+            Livre livre = bibliotheque.Livres.FirstOrDefault(l => l.Titre.Equals(titre, StringComparison.OrdinalIgnoreCase));
+
+            if (livre != null)
+            {
+                bibliotheque.EmprunterLivre(livre, DateTime.Now);
+                Console.WriteLine("Livre emprunté avec succès!\n");
+            }
+            else
+            {
+                Console.WriteLine("Le livre n'existe pas.\n");
+            }
+        }
+
+        // Opération de retour
+        static void Retourner(Bibliotheque bibliotheque)
+        {
+            Console.Write("Titre: ");
+            string titre = Console.ReadLine();
+
+            Livre livre = bibliotheque.Livres.FirstOrDefault(l => l.Titre.Equals(titre, StringComparison.OrdinalIgnoreCase));
+
+            if (livre != null)
+            {
+                bibliotheque.RetournerLivre(livre);
+                Console.WriteLine("Livre retourné avec succès!\n");
+            }
+            else
+            {
+                Console.WriteLine("Ce n'est pas notre livre\n");
+            }
+        }
+
         static void Main(string[] args)
         {
-            Menu();
             bool response = true;
+
+            // Instanciation d'un élément de type Bibliotheque
+            Bibliotheque bibliotheque = new Bibliotheque();
             while (response)
             {
+                // Menu
+                Menu();
                 Console.Write("Choix: ");
+
+                // Attendre la valeur de l'utilisateur
                 string input = Console.ReadLine();
                 int choix;
+
+                // Vérifier si la valeur entrée par l'utilisateur est un entier
                 if (!(int.TryParse(input, out choix)))
                 {
                     choix = -1;
                     //Console.WriteLine("Your value: " + choix);
                 }
 
+                // Système d'échange des valeurs entrées par l'utilisateur
                 switch (choix)
                 {
                     case 0:
-                        Console.WriteLine("Vous Avez Quitte Le Programme\n\n");
+                        Console.WriteLine("Vous Avez Quitte Le Programme, A Bientot !!!\n");
                         response = false;
                         break;
                     case 1:
-                        Console.WriteLine("Ajouter Un Livre");
+                        Console.WriteLine("============ Ajouter Un Livre ============\n");
+                        Ajouter(bibliotheque);
                         break;
                     case 2:
-                        Console.WriteLine("Emprunter Un Livre");
+                        Console.WriteLine("============ Emprunter Un Livre ============\n");
+                        Emprunter(bibliotheque);
                         break;
                     case 3:
-                        Console.WriteLine("Retourner Un Livre");
+                        Console.WriteLine("============ Retourner Un Livre ============\n");
+                        Retourner(bibliotheque);
                         break;
                     case 4:
-                        Console.WriteLine("Lister Les Livres Disponibles");
+                        Console.WriteLine("============ Lister Les Livres Disponibles ============\n");
+                        bibliotheque.LivresDisponible();
                         break;
                     case 5:
-                        Console.WriteLine("Lister Les Emprunts En Cours");
+                        Console.WriteLine("============ Lister Les Emprunts En Cours ============\n");
+                        bibliotheque.LivresEmpruntEncours();
                         break;
                     default:
-                        Console.WriteLine("Mauvais Choix, Reessayez !");
+                        Console.WriteLine("Mauvais Choix, Reessayez !\n");
                         break;
                 }
             }
